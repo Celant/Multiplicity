@@ -8,6 +8,8 @@ namespace Multiplicity.Packets
     public class TravellingMerchantInventory : TerrariaPacket
     {
 
+        public short[] Items { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TravellingMerchantInventory"/> class.
         /// </summary>
@@ -24,6 +26,9 @@ namespace Multiplicity.Packets
         public TravellingMerchantInventory(BinaryReader br)
             : base(br)
         {
+            Items = new short[40];
+            for (int i = 0; i < 40; i++)
+                Items[i] = br.ReadInt16();
         }
 
         public override string ToString()
@@ -35,7 +40,7 @@ namespace Multiplicity.Packets
 
         public override short GetLength()
         {
-            return (short)(0);
+            return (short)(80);
         }
 
         public override void ToStream(Stream stream, bool includeHeader = true)
@@ -55,7 +60,10 @@ namespace Multiplicity.Packets
              * the regressions of unconditionally closing the TCP socket
              * once the payload of data has been sent to the client.
              */
-            using (BinaryWriter br = new BinaryWriter(stream, new System.Text.UTF8Encoding(), leaveOpen: true)) {
+            using (BinaryWriter br = new BinaryWriter(stream, new System.Text.UTF8Encoding(), leaveOpen: true))
+            {
+                for (int i = 0; i < 40; i++)
+                    br.Write(Items[i]);
             }
         }
 

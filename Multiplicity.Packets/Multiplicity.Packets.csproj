@@ -34,9 +34,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorStruct.cs" />
+    <Compile Include="CombatTextString.cs" />
     <Compile Include="CrystalInvasionSendWaitTime.cs" />
     <Compile Include="CrystalInvasionStart.cs" />
     <Compile Include="CrystalInvasionWipeAll.cs" />
@@ -175,4 +176,8 @@
     <Compile Include="Models\NetworkText.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if not exist "$(ProjectDir)_BuildResult" mkdir "$(ProjectDir)_BuildResult"
+copy /Y "$(TargetDir)$(TargetName).dll" "$(ProjectDir)_BuildResult\$(TargetName).dll</PostBuildEvent>
+  </PropertyGroup>
 </Project>

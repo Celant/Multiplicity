@@ -1,60 +1,56 @@
-using System;
+﻿using System;
 using System.IO;
 using Multiplicity.Packets.Extensions;
-using System.Drawing;
 using Multiplicity.Packets.Models;
 
 namespace Multiplicity.Packets
 {
     /// <summary>
-    /// The ChatMessagev2 (0x6B) packet.
+    /// The CombatTextString (0x77) packet.
     /// </summary>
-    public class ChatMessagev2 : TerrariaPacket
+    public class CombatTextString : TerrariaPacket
     {
 
-        /// <summary>
-        /// Gets or sets the MessageColor - Client cannot change colors|
-        /// </summary>
-        public ColorStruct MessageColor { get; set; }
+        public float X { get; set; }
+
+        public float Y { get; set; }
+
+        public ColorStruct Color { get; set; }
+
+        public NetworkText CombatText { get; set; }
 
         /// <summary>
-        /// Gets or sets the Message - |-|
+        /// Initializes a new instance of the <see cref="CombatTextString"/> class.
         /// </summary>
-        public NetworkText Message { get; set; }
-
-        public short MessageLength { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ChatMessagev2"/> class.
-        /// </summary>
-        public ChatMessagev2()
-            : base((byte)PacketTypes.ChatMessagev2)
+        public CombatTextString()
+            : base((byte)PacketTypes.CombatTextString)
         {
 
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ChatMessagev2"/> class.
+        /// Initializes a new instance of the <see cref="CombatTextString"/> class.
         /// </summary>
         /// <param name="br">br</param>
-        public ChatMessagev2(BinaryReader br)
+        public CombatTextString(BinaryReader br)
             : base(br)
         {
-            this.MessageColor = br.ReadColor();
-            this.Message = br.ReadNetworkText();
-            this.MessageLength = br.ReadInt16();
+            this.X = br.ReadSingle();
+            this.Y = br.ReadSingle();
+            this.Color = br.ReadColor();
+            this.CombatText = br.ReadNetworkText();
         }
 
         public override string ToString()
         {
-            return $"[ChatMessagev2: MessageColor = {MessageColor} Message = {Message.Text} MessageLength = {MessageLength}]";
+            return $"[CombatTextString: X = {X}, Y = {Y}, Color = {Color}, CombatText = {CombatText}]";
         }
 
         #region implemented abstract members of TerrariaPacket
 
         public override short GetLength()
         {
-            return (short)(5 + Message.GetLength());
+            return (short)(11 + CombatText.GetLength());
         }
 
         public override void ToStream(Stream stream, bool includeHeader = true)
@@ -77,9 +73,10 @@ namespace Multiplicity.Packets
              */
             using (BinaryWriter br = new BinaryWriter(stream, new System.Text.UTF8Encoding(), leaveOpen: true))
             {
-                br.Write(MessageColor);
-                br.Write(Message);
-                br.Write(MessageLength);
+                br.Write(X);
+                br.Write(Y);
+                br.Write(Color);
+                br.Write(CombatText);
             }
         }
 

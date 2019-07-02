@@ -18,7 +18,7 @@ namespace Multiplicity.Packets
         /// <summary>
         /// Gets or sets the MessageColor - Client cannot change colors|
         /// </summary>
-        public Color MessageColor { get; set; }
+        public ColorStruct MessageColor { get; set; }
 
         public string Message { get; set; }
 
@@ -60,7 +60,8 @@ namespace Multiplicity.Packets
             /*
              * Length and ID headers get written in the base packet class.
              */
-            if (includeHeader) {
+            if (includeHeader)
+            {
                 base.ToStream(stream, includeHeader);
             }
 
